@@ -91,6 +91,14 @@ update: async function (req, res) {
     }
 },
 
+populate: async function (req, res) {
 
+    var model = await Person.findOne(req.params.id).populate("worksFor");
+
+    if (!model) return res.notFound();
+
+    return res.json(model);
+
+},
 };
 

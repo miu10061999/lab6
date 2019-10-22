@@ -28,8 +28,16 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    supervises: {
+      collection: 'Person',
+      via: 'worksFor'
+    },
   },
+
+  customToJSON: function() {
+    // Return a shallow copy of this record with the password removed.
+    return _.omit(this, ['password'])
+},
 
 };
 

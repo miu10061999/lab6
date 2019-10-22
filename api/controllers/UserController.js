@@ -45,5 +45,48 @@ module.exports = {
 
         });
     },
+    populate: async function (req, res) {
+
+        var model = await User.findOne(req.params.id).populate("supervises");
+    
+        if (!model) return res.notFound();
+    
+        return res.json(model);
+    
+    },
+
+    add: async function (req, res) {
+
+        if (!await User.findOne(req.params.id)) return res.notFound();
+        
+        const thatPerson = await Person.findOne(req.params.fk).populate("worksFor", {id: req.params.id});
+    
+        if (!thatPerson) return res.notFound();//cannot find person by its fk
+            
+        if (thatPerson.worksFor.length)//the length is 1 thst mean we can find that the user has already supervise the person (array length = 1)
+            return res.status(409).send("Already added.");   // conflict
+        
+        await User.addToCollection(req.params.id, "supervises").members(req.params.fk);
+    
+        return res.ok('Operation completed.');
+    
+    },
+
+    remove: async function (req, res) {
+
+        if (!await User.findOne(req.params.id)) return res.notFound();
+        
+        const thatPerson = await Person.findOne(req.params.fk).populate("worksFor", {id: req.params.id});
+        
+        if (!thatPerson) return res.notFound();
+    
+        if (!thatPerson.worksFor.length)
+            return res.status(409).send("Nothing to delete.");    // conflict
+    
+        await User.removeFromCollection(req.params.id, "supervises").members(req.params.fk);
+    
+        return res.ok('Operation completed.');
+    
+    },
 };
 
