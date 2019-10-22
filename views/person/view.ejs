@@ -1,0 +1,6 @@
+<div>Requested Person (id = <%= person.id %>):</div>
+<div>Name: <%= person.name %>&nbsp
+Age: <%= person.age %></div>
+<form action= "/person/delete/<%= person.id %>" method="POST">
+    <button type="submit">Delete</button>
+</form>
