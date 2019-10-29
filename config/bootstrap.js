@@ -27,36 +27,41 @@ module.exports.bootstrap = async function () {
   //   // etc.
   // ]);
   // ```
+  if (await Person.count() > 0) {
+    return generateUsers();
+}
 
-  if (await Person.count() == 0) {
+await Person.createEach([
+    { name: "Martin Choy", age: 23 },
+    { name: "Kenny Cheng", age: 22 },
+    { name: "Miu Cheung",  age: 20 },
+    { name: "Ludovico Lalli", age: 27},
+    // etc.
+]);
 
-    await Person.createEach([
-      { name: "Martin Choy", age: 23 },
-      { name: "Kenny Cheng", age: 22 }
-      // etc.
-    ]);
+return generateUsers();
 
-  }
+async function generateUsers() {
 
-  if (await User.count() == 0) {
-
+    if (await User.count() > 0) {
+      return;
+    }
+    
     const hash = await sails.bcrypt.hash('123456', saltRounds);
-
+    
     await User.createEach([
       { username: "admin", password: hash },
-      { username: "boss", password: hash }
+      { username: "boss", password: hash },
       // etc.
     ]);
+    
+    const martin = await Person.findOne({ name: "Martin Choy" });
+    const kenny = await Person.findOne({ name: "Kenny Cheng" });
+    const admin = await User.findOne({ username: "admin" });
+    const boss = await User.findOne({ username: "boss" });
+    
+    await User.addToCollection(admin.id, 'supervises').members(kenny.id);
+    await User.addToCollection(boss.id, 'supervises').members([martin.id, kenny.id]);
 
-  }
-
-  const martin = await Person.findOne({ name: "Martin Choy" });
-  const kenny = await Person.findOne({ name: "Kenny Cheng" });
-  const admin = await User.findOne({ username: "admin" });
-  const boss = await User.findOne({ username: "boss" });
-
-  await User.addToCollection(admin.id, 'supervises').members(kenny.id);
-  await User.addToCollection(boss.id, 'supervises').members([martin.id, kenny.id]);
-
-  return;
+}
 };

@@ -19,9 +19,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': { view: 'pages/homepage' },
+  '/': 'PersonController.index',
   'GET /person/view/:id': 'PersonController.view',//follow by an id (:id)
-  'POST /person/delete/:id': 'PersonController.delete',
+  'DELETE /person/:id': 'PersonController.delete',
   'GET /person/update/:id': 'PersonController.update',
   'POST /person/update/:id': 'PersonController.update',
   'GET /user/login': 'UserController.login',

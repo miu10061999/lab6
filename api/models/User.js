@@ -14,12 +14,20 @@ module.exports = {
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
     username: {
-      type: "string"
+      type: 'string',
+      unique: true,
+      required: true
     },
     
     password: {
       type: "string"
     },
+
+    role: {
+      type: 'string',
+      isIn: ['admin', 'tester', 'visitor'],
+      defaultsTo: 'visitor'
+  },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

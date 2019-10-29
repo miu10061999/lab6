@@ -1,6 +1,38 @@
 <div>Requested Person (id = <%= person.id %>):</div>
 <div>Name: <%= person.name %>&nbsp
-Age: <%= person.age %></div>
-<form action= "/person/delete/<%= person.id %>" method="POST">
-    <button type="submit">Delete</button>
+    Age: <%= person.age %></div>
+<form action="/person/delete/<%= person.id %>" method="POST">
+    <button type="button" class="btn btn-danger" onclick="deletePerson('<%= person.id %>')">Delete</button>
 </form>
+
+
+<script>
+
+    async function deletePerson(id) {
+
+        var r = confirm("Confirm Delete?");
+
+        if (r) {
+
+            var response = await fetch("/person/" + id, {
+                method: "DELETE",
+                credentials: 'same-origin',
+            });
+
+            //var html = await response.text();
+            //alert(html);
+            if (response.ok) {
+                var data = await response.json(); //from respond
+                alert(data.message);
+                window.location = data.url;//redirect
+            } else {
+                alert(response.status + ": " + response.statusText);
+            }
+
+        } else {
+            alert("cancelled");
+        }
+
+    };
+
+</script>

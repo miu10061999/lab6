@@ -60,7 +60,11 @@ module.exports = {
 
         if (models.length == 0) return res.notFound();
 
-        return res.ok("Person Deleted.");
+        if (req.wantsJSON){//if request from ajax ->true
+            return res.json({message: "Person deleted.", url: '/'});    // for ajax request
+        } else {//if regular request
+            return res.redirect('/');           // for normal request
+        }
 
     },
     // action - update
